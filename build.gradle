@@ -19,7 +19,6 @@ dependencies {
 }
 
 test {
-	// enable TestNG support
 	useTestNG()
 }
 

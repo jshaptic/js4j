@@ -114,14 +114,14 @@ public class JsonParser
 		int length = array.getLength(0);
 		for (int i = 0; i < length; i++)
 		{
-			UniversalContainer arraValue = array.get(i);
-			if (arraValue.isUndefined())
+			UniversalContainer element = array.get(i);
+			if (element.isUndefined())
 			{
 				sb.append("null");
 			}
 			else
 			{
-				baseStringify(arraValue, sb, stack);
+				baseStringify(element, sb, stack);
 			}
 			if (i != length-1) sb.append(",");
 		}
@@ -150,18 +150,19 @@ public class JsonParser
 		
 		stack.add(object);
 		
-		int length = keys.size();
+		boolean hasPairs = false;
 		for (String k : keys)
 		{
-			length--;
 			UniversalContainer objectValue = object.get(k);
 			if (!objectValue.isUndefined())
 			{
 				sb.append("\"" + k + "\":");
 				baseStringify(objectValue, sb, stack);
-				if (length != 0) sb.append(",");
+				sb.append(",");
+				hasPairs = true;
 			}
 		}
+		if (hasPairs) sb.deleteCharAt(sb.length()-1);
 		
 		if (stack.size() > 0) stack.remove(stack.size()-1);
 
