@@ -1638,17 +1638,38 @@ public class TestUniversalContainer extends Assert
 		assertEquals(JsonParser.stringify(ContainerFactory.nullContainer()), "null");
 		assertEquals(JsonParser.stringify(new UniversalContainer(false)), "false");
 		assertEquals(JsonParser.stringify(new UniversalContainer(000)), "0");
+		assertEquals(JsonParser.stringify(new UniversalContainer("0")), "\"0\"");
 		assertEquals(JsonParser.stringify(new UniversalContainer("[]")), "\"[]\"");
+		assertEquals(JsonParser.stringify(ContainerFactory.createObject()), "{}");
+		assertEquals(JsonParser.stringify(ContainerFactory.createArray()), "[]");
 		assertEquals(JsonParser.stringify(ContainerFactory.createArray(null,null,null)), "[null,null,null]");
 		assertEquals(JsonParser.stringify(c1), "[\"aaa\",true,[555,[null,null,null,{},null,null,null],\"cc\"]]");
-		assertEquals(JsonParser.stringify(c2), "{\"0\":\"aaa\",\"b\":false,\"2\":{\"0\":0,\"1\":[null,null,null,{},null,null,null],\"2\":\"cc\"}}");
-		assertEquals(JsonParser.stringify(c3), "[\"aaa\",\"bbb\",{\"0\":\"aa\",\"1\":{\"0\":\"a\",\"3\":{},\"4\":null,},\"c\":\"cc\"}]");
+		
+		String c2str = JsonParser.stringify(c2);
+		c2str = c2str.replace("\"0\":0", "")
+			 		 .replace("\"1\":[null,null,null,{},null,null,null]", "")
+			 		 .replace("\"2\":\"cc\"", "")
+			 		 .replace("\"0\":\"aaa\"", "")
+			 		 .replace("\"b\":false", "")
+			 		 .replace("\"2\":{,,}", "");
+		assertEquals(c2str, "{,,}");
+		
+		String c3str = JsonParser.stringify(c3);
+		c3str = c3str.replace("\"0\":\"a\"", "")
+	 		 		 .replace("\"3\":{}", "")
+	 		 		 .replace("\"4\":null", "")
+	 		 		 .replace("\"0\":\"aa\"", "")
+	 		 		 .replace("\"1\":{,,,}", "")
+	 		 		 .replace("\"c\":\"cc\"", "");
+		assertEquals(c3str, "[\"aaa\",\"bbb\",{,,}]");
+		
+		// For recursive containers stringify should throw an error
 		
 		try
 		{
 			c1.get(2).get(1).set(4, c1);
 			JsonParser.stringify(c1);
-			fail("In this case stringify should throw an error!");
+			fail("For recursive containers stringify should throw an error!");
 		}
 		catch (ContainerException e){ assertEquals(e.getMessage(), "Cannot convert circular container to JSON string"); }
 		
@@ -1656,7 +1677,7 @@ public class TestUniversalContainer extends Assert
 		{
 			c2.get(2).get(1).set(4, c1);
 			JsonParser.stringify(c2);
-			fail("In this case stringify should throw an error!");
+			fail("For recursive containers stringify should throw an error!");
 		}
 		catch (ContainerException e){ assertEquals(e.getMessage(), "Cannot convert circular container to JSON string"); }
 		
@@ -1665,7 +1686,7 @@ public class TestUniversalContainer extends Assert
 			c2.get(2).get(1).set(4, c3);
 			c3.get(2).get(1).set(4, c2);
 			JsonParser.stringify(c2);
-			fail("In this case stringify should throw an error!");
+			fail("For recursive containers stringify should throw an error!");
 		}
 		catch (ContainerException e){ assertEquals(e.getMessage(), "Cannot convert circular container to JSON string"); }
 	}
