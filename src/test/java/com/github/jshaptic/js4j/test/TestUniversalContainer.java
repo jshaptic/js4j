@@ -1659,7 +1659,7 @@ public class TestUniversalContainer extends Assert
 	 		 		 .replace("\"3\":{}", "")
 	 		 		 .replace("\"4\":null", "")
 	 		 		 .replace("\"0\":\"aa\"", "")
-	 		 		 .replace("\"1\":{,,,}", "")
+	 		 		 .replace("\"1\":{,,}", "")
 	 		 		 .replace("\"c\":\"cc\"", "");
 		assertEquals(c3str, "[\"aaa\",\"bbb\",{,,}]");
 		
