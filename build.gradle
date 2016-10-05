@@ -16,7 +16,11 @@ dependencies {
 }
 
 test {
+	// enable TestNG support
 	useTestNG()
+	
+	// show standard out and standard error of the test JVM(s) on the console
+	testLogging.showStandardStreams = true
 }
 
 jacocoTestReport {
