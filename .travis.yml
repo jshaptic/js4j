@@ -11,7 +11,7 @@ after_success:
   - ./gradlew check jacocoTestReport coveralls
   
 after_failure:
-  - "cat build/test-results/*.xml" 
+  - cat build/test-results/test/*.xml 
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
