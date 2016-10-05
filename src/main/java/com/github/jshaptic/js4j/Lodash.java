@@ -541,7 +541,7 @@ public class Lodash
 	/**
 	 * Creates an ARRAY continer of the own enumerable string keyed property values of OBJECT container.
 	 * 
-	 * @param 	OBJECT container to query for values.
+	 * @param 	object OBJECT container to query for values.
 	 * @return 	ARRAY container of property values.
 	 */
 	public static UniversalContainer values(UniversalContainer object)

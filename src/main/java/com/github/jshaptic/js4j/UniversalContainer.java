@@ -14,11 +14,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * Wrapper container for various types of objects, also provides some generic methods for manipulation over stored
- * object regardless of the class. Simply UniversalContainer just emulates behaviour of javascript variables and all
- * methods replicate API of various JS objects. It was created to ease porting of javascript code to Java, but can be
- * used in any other cases.
+ * object regardless of the class. Simply, UniversalContainer just emulates behaviour of javascript variables and its
+ * methods. All methods are implemented as close as possible to JS API. It was created to ease porting of Javascript
+ * code to Java, but can be used in any other cases.
  * <p>
- * All public methods in this container try to replicate behaviour of JS variables as much as possible, however there
+ * All public methods in this class try to replicate behaviour of JS variables as much as possible, however there
  * can be some differences, but API is quite close to JS. Full list of all implemented javascript methods and properties
  * (fully, partially or differently):
  * <ul>
@@ -47,13 +47,10 @@ import org.apache.commons.lang3.math.NumberUtils;
  * <li>Array.prototype.concat()</li>
  * <li>Array.prototype.indexOf()</li>
  * </ul>
- * </p>
  * <p>
- * Also this container has shortcuts to some popular methods from Lodash library, see {@link Lodash} class.
- * </p>
- * <p>
- * Table of all supported container types and corresponding java raw classes:
+ * Also this class has shortcuts to some popular methods from Lodash library, see {@link Lodash} class.
  * <table>
+ * <caption>Table of all supported container types and corresponding java raw classes</caption>
  * <tr>
  * <th>Container</th>
  * <th>Java raw class</th>
@@ -92,7 +89,6 @@ import org.apache.commons.lang3.math.NumberUtils;
  * from it)</td>
  * </tr>
  * </table>
- * </p>
  */
 public class UniversalContainer implements Iterable<UniversalContainer>
 {
@@ -146,8 +142,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	}
 	
 	/**
-	 * Constructor, which will produce container depending on the specifed constructor, see {@link ContainerConstructor}
-	 * .
+	 * Constructor, which will produce container depending on the specifed constructor, see {@link ContainerConstructor}.
+	 * 
+	 * @param type constructor, which will define the current container.
 	 */
 	protected UniversalContainer(ContainerConstructor type)
 	{
@@ -175,6 +172,8 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Constructor, which will produce simple LITERAL container with the specified value.
+	 * 
+	 * @param value value, which will be stored in the LITERAL container.
 	 */
 	public UniversalContainer(Object value)
 	{
@@ -184,6 +183,8 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Constructor, which will produce very shallow copy of the specified container. All changes in the copied container
 	 * will be reflected in the specified container and vice versa.
+	 * 
+	 * @param container container, which will be copied.
 	 */
 	public UniversalContainer(UniversalContainer container)
 	{
@@ -192,6 +193,8 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Constructor, which will produce ARRAY container with the values based on the specified array.
+	 * 
+	 * @param array java array, which will be used as source for new ARRAY container.
 	 */
 	public UniversalContainer(Object[] array)
 	{
@@ -200,6 +203,8 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Constructor, which will produce ARRAY container with the values based on the specified Iterable object.
+	 * 
+	 * @param list any Iterable object, which will be used as source for new ARRAY container.
 	 */
 	public UniversalContainer(Iterable<Object> list)
 	{
@@ -208,6 +213,8 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Constructor, which will produce OBJECT container with the values based on the specified Map.
+	 * 
+	 * @param map any Map object, which will be used as source for new OBJECT container.
 	 */
 	public UniversalContainer(Map<Object, Object> map)
 	{
@@ -448,13 +455,14 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Converts current ARRAY container to List. If current container holds any primitive value or String it return List
 	 * with one element. In all other cases it will return empty list.
 	 * 
+	 * @param <T> the type of the List element
 	 * @param clazz class, which will as a type for a resulting List.
 	 * @return List object, converted from ARRAY container; or just empty list.
 	 * @throws ClassCastException if one of the values cannot be casted to a desired class.
 	 */
-	public <V> List<V> asList(Class<V> clazz)
+	public <T> List<T> asList(Class<T> clazz)
 	{
-		List<V> list = new ArrayList<V>();
+		List<T> list = new ArrayList<T>();
 		
 		if (!isString() && test(BUILTIN_PROPERTY_LENGTH))
 		{
@@ -475,13 +483,14 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Converts current OBJECT container to Map. For all other containers empty map will be returned. Resulting map key
 	 * type will always be a String.
 	 * 
+	 * @param <T> the type of the Map element
 	 * @param clazz class, which will be used as a type for a resulting Map.
 	 * @return Map object, converted from OBJECT container; or just empty map.
 	 * @throws ClassCastException if one of the values cannot be casted to a desired class.
 	 */
-	public <V> Map<String, V> asMap(Class<V> clazz)
+	public <T> Map<String, T> asMap(Class<T> clazz)
 	{
-		Map<String, V> map = new HashMap<String, V>();
+		Map<String, T> map = new HashMap<String, T>();
 		
 		if (isObject())
 		{
@@ -498,6 +507,7 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Simply extracts value from the current container. If current container is not LITERAL, null value will be
 	 * returned, otherwise stored value will be extracted.
 	 * 
+	 * @param <T> the type of the value stored in the container
 	 * @return casted value, which is stored in the current container.
 	 * @throws ClassCastException if value cannot be casted to a desired class.
 	 */
@@ -514,6 +524,7 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Simply extracts value from the specified position in the current container. This method works as if invoking it
 	 * were equivalent to evaluating the expression: <blockquote><code>get(index).valueOf();</code></blockquote>
 	 * 
+	 * @param <T> the type of the value stored in the container
 	 * @param index position of value, which will be extracted.
 	 * @return casted value, which is stored in the specified position of the current container.
 	 * @throws ContainerException if current container is UNDEFINED or NULL, since these containers can't have indexes.
@@ -529,6 +540,7 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Simply extracts value from the specified property in the current container. This method works as if invoking it
 	 * were equivalent to evaluating the expression: <blockquote><code>get(property).valueOf();</code></blockquote>
 	 * 
+	 * @param <T> the type of the value stored in the container
 	 * @param property name of the property, which value will be extracted.
 	 * @return casted value, which is stored in the specified property of the current container.
 	 * @throws ContainerException if current container is UNDEFINED or NULL, since these containers can't have
@@ -590,11 +602,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Checks if current container is BOOLEAN LITERAL container.
-	 * 
 	 * <p>
-	 * <b>Javascript Note:</b> can be used as a replacement of expression <blockquote>
-	 * <code>typeof obj === "boolean"</code> </blockquote>
-	 * </p>
+	 * <b>Javascript Note:</b> can be used as a replacement of expression
+	 * <blockquote><code>typeof obj === "boolean"</code></blockquote>
 	 * 
 	 * @return true if current container is BOOLEAN LITERAL container, false otherwise.
 	 */
@@ -634,11 +644,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Checks if current container is OBJECT container. It also will return true for NULL and ARRAY containers.
-	 * 
 	 * <p>
-	 * <b>Javascript Note:</b> can be used as a replacement of expression <blockquote>
-	 * <code>typeof obj === "object"</code> </blockquote>
-	 * </p>
+	 * <b>Javascript Note:</b> can be used as a replacement of expression
+	 * <blockquote><code>typeof obj === "object"</code></blockquote>
 	 * 
 	 * @return true if current container is OBJECT, ARRAY or NULL container, false otherwise.
 	 */
@@ -678,11 +686,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Checks if current container is NULL container.
-	 * 
 	 * <p>
-	 * <b>Javascript Note:</b> can be used as a replacement of expression <blockquote>
-	 * <code>obj === null</code> </blockquote>
-	 * </p>
+	 * <b>Javascript Note:</b> can be used as a replacement of expression
+	 * <blockquote><code>obj === null</code></blockquote>
 	 * 
 	 * @return true if current container is NULL container, false otherwise.
 	 */
@@ -722,11 +728,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Checks if current container is NUMBER LITERAL container.
-	 * 
 	 * <p>
-	 * <b>Javascript Note:</b> can be used as a replacement of expression <blockquote>
-	 * <code>typeof obj === "number"</code> </blockquote>
-	 * </p>
+	 * <b>Javascript Note:</b> can be used as a replacement of expression
+	 * <blockquote><code>typeof obj === "number"</code></blockquote>
 	 * 
 	 * @return true if current container is NUMBER LITERAL container, false otherwise.
 	 */
@@ -766,11 +770,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Checks if current container is STRING LITERAL container.
-	 * 
 	 * <p>
-	 * <b>Javascript Note:</b> can be used as a replacement of expression <blockquote>
-	 * <code>typeof obj === "string"</code> </blockquote>
-	 * </p>
+	 * <b>Javascript Note:</b> can be used as a replacement of expression
+	 * <blockquote><code>typeof obj === "string"</code></blockquote>
 	 * 
 	 * @return true if current container is STRING LITERAL container, false otherwise.
 	 */
@@ -810,11 +812,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * Checks if current container is UNDEFINED container.
-	 * 
 	 * <p>
-	 * <b>Javascript Note:</b> can be used as a replacement of expression <blockquote>
-	 * <code>obj === undefined</code> </blockquote>
-	 * </p>
+	 * <b>Javascript Note:</b> can be used as a replacement of expression
+	 * <blockquote><code>obj === undefined</code></blockquote>
 	 * 
 	 * @return true if current container is UNDEFINED container, false otherwise.
 	 */
@@ -855,12 +855,10 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Checks if current container can be resolved to true in "if" conditions. Following values will be considered as
 	 * false: UNDEFINED, NULL, false, 0, "", null LITERAL, but all other values will be treated as true.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a general way to emulate values checking in "if" conditions in JS. For
-	 * example following expression: <blockquote> <code>if (obj) { ... }</code> </blockquote> can be replaced with
-	 * something like this: <blockquote> <code>if (obj.test()) { ... }</code> </blockquote>
-	 * </p>
+	 * example following expression: <blockquote><code>if (obj) { ... }</code></blockquote> can be replaced with
+	 * something like this: <blockquote><code>if (obj.test()) { ... }</code></blockquote>
 	 * 
 	 * @return true if current container holds a value, which can be positively resolved in "if" condition; false
 	 *         otherwise.
@@ -905,11 +903,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Checks if value in specified property can be resolved to true in "if" conditions. In most cases this method works
 	 * the same as following expression: <blockquote><code>get(property).test();</code></blockquote>
-	 * 
 	 * <p>
 	 * but it will work differently for built-in properties like "constructor" and "length" - it will check if
 	 * {@link #getConstructor()} returns null and if {@link #getLength(Integer)} returns 0 accordingly.
-	 * </p>
 	 * 
 	 * @param property name of the property, which will be tested.
 	 * @return true if value in specified property can be positively resolved in "if" condition; false otherwise.
@@ -942,17 +938,13 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * will return container with a character located at specified position in the string. If index doesn't exist,
 	 * UNDEFINED container will be returned. If current container is UNDEFINED or NULL, method will throw
 	 * {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method will first scan current container for an index and if nothing will be found it will scan
 	 * prototype.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a general way to access values by index, it emulates square brackets in
 	 * JS. For example following expression: <blockquote><code>value = obj[index];</code></blockquote> can be replaced
 	 * with something like this: <blockquote><code>value = obj.get(index);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param index position in the current container, which will be read.
 	 * @return container, which is stored at specified position or UNDEFINED container if nothing was found.
@@ -979,18 +971,14 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Reads specified property from the current container. If property doesn't exist, UNDEFINED container will be
 	 * returned. If current container is UNDEFINED or NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method will first scan current container for a property and if nothing will be found it will
 	 * scan prototype.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a general way to access property, it emulates square brackets and dot
 	 * notation in JS. For example following expressions: <blockquote><code>value = obj[property];</code></blockquote>
 	 * <blockquote><code>value = obj.property;</code></blockquote> can be replaced with something like this:
 	 * <blockquote> <code>value = obj.get(property);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param property name of the property in the current container, which will be read.
 	 * @return container, which is stored in specified property or UNDEFINED container if nothing was found.
@@ -1030,16 +1018,12 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Reads built-in "constructor" property. If current container is UNDEFINED or NULL, method will throw
 	 * {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method will first search current container for a constructor property and if nothing will be
 	 * found it will search in prototype and so on.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Warning:</b> do not use this method, because it's not finalized yet, currently it's only used in
 	 * {@link Lodash#isEqual(UniversalContainer, Object)} method.
-	 * </p>
 	 * 
 	 * @return constructor or null if doesn't exist.
 	 * @throws ContainerException if current container is UNDEFINED or NULL, since these containers can't have
@@ -1063,11 +1047,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Reads built-in "length" property. This method is unsafe, because it can return null value if there is no length
 	 * property, so it's better to use method {@link #getLength(Integer)} instead. If current container is UNDEFINED or
 	 * NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method will first search current container for a length property and if nothing will be found
 	 * it will search in prototype and so on.
-	 * </p>
 	 * 
 	 * @return length or null if doesn't exist.
 	 * @throws ContainerException if current container is UNDEFINED or NULL, since these containers can't have length.
@@ -1081,11 +1063,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Reads built-in "length" property. If length doesn't exist defaultValue will be returned instead. If current
 	 * container is UNDEFINED or NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method will first search current container for a length property and if nothing will be found
 	 * it will search in prototype and so on.
-	 * </p>
 	 * 
 	 * @param defaultLength the value, which will be returned if length doesn't exists.
 	 * @return length or <b>defaultValue</b> if doesn't exist.
@@ -1122,12 +1102,10 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Writes value in the current container under specified index. All raw values will be wrapped into corresponding
 	 * containers. If current container is a LITERAL container nothing will happen, value won't be saved. If current
 	 * container is UNDEFINED or NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a general way to write values at specified index, it emulates square
 	 * brackets in JS. For example following expression: <blockquote><code>obj[index] = value;</code></blockquote> can
 	 * be replaced with something like this: <blockquote><code>obj.set(index, value);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param index position in the current container, where object will be stored.
 	 * @param value object, which will be stored in the current container under specified position.
@@ -1155,13 +1133,11 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * Writes value in the current container under specified property. All raw values will be wrapped into corresponding
 	 * containers. If current container is a LITERAL container nothing will happen, value won't be saved. If current
 	 * container is UNDEFINED or NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a general way to write value under specified property, it emulates square
 	 * brackets and dot notation in JS. For example following expressions: <blockquote>
 	 * <code>obj[property] = value;</code></blockquote> <blockquote><code>obj.property = value;</code></blockquote> can
 	 * be replaced with something like this: <blockquote> <code>obj.set(property, value);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param property name of the property, under which value will be stored.
 	 * @param value object, which will be stored in the current container.
@@ -1225,14 +1201,12 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * This method has two different algorithms depending on the current container type:
-	 * 
 	 * <p>
 	 * 1) If current container is a STRING LITERAL, then this method will convert all sources to a string and will
 	 * produce new STRING LITERAL container consisted of all strings appended one by one. This is a precise
 	 * implementation of JS method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat">String.
 	 * prototype.concat()</a>.
-	 * </p>
 	 * <p>
 	 * 2) If current container is an ARRAY, then this method will create new ARRAY container, will add all values of the
 	 * current container to the new one and will join all the sources one by one. Depending on the source value
@@ -1241,17 +1215,13 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * of new ARRAY container. This is a precise implementation of JS method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat">Array.
 	 * prototype.concat()</a>.
-	 * </p>
 	 * <p>
 	 * 3) For all other containers this method will throw {@link ContainerException} with a description that this method
 	 * is not supported.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Note:</b> concatenating array(s)/value(s) will leave the originals untouched. Furthermore, any operation on
 	 * the new ARRAY container (only if the element is not object reference) will have no effect on the original
 	 * array(s)/value(s), and vice versa.
-	 * </p>
 	 * 
 	 * @param sources list of values, that should be joined with the current container, all raw values will be wrapped
 	 *            into corresponding containers.
@@ -1330,14 +1300,12 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Creates new OBJECT container, with the current container as a prototype. Method will work only for ARRAY, OBJECT
 	 * and NULL containers and for all others it will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method emulates static javascript method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create">Object.
 	 * create()</a>. It's not a precise implementation since current method is not static and parameter propertiesObject
 	 * is missing. As an example following expression: <blockquote><code>Object.create(obj);</code></blockquote> can be
 	 * replaced with something like this: <blockquote><code>obj.create();</code></blockquote>
-	 * </p>
 	 * 
 	 * @return new OBJECT container with the current container as a prototype.
 	 * @throws ContainerException if current container is not ARRAY, OBJECT or NULL container.
@@ -1358,17 +1326,13 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Removes an index from the current container. If there is no such index nothing will happen. If current container
 	 * is UNDEFINED or NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method mutates current OBJECT or ARRAY container.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method emulates javascript
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete">delete operator</a>.
 	 * As an example following expression: <blockquote><code>delete obj[index];</code></blockquote> can be replaced with
 	 * something like this: <blockquote><code>obj.delete(index);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param index position in the container, which will be removed.
 	 * @throws ContainerException if current container is not ARRAY or OBJECT container.
@@ -1381,18 +1345,14 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Removes a property from the current container. If there is no such property nothing will happen. If current
 	 * container is UNDEFINED or NULL, method will throw {@link ContainerException}.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method mutates current OBJECT or ARRAY container.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method emulates javascript
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete">delete operator</a>.
 	 * As an example following expressions: <blockquote><code>delete obj[property];</code></blockquote><blockquote>
 	 * <code>delete obj.property;</code></blockquote> can be replaced with something like this: <blockquote>
 	 * <code>obj.delete(property);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param property name of the property in the container, which will be removed.
 	 * @throws ContainerException if current container is not ARRAY or OBJECT container.
@@ -1443,7 +1403,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * container for an index, otherwise it will also search among inherited indexes from the prototype. If current
 	 * container is a STRING LITERAL this method will return true if index is equal or greater than 0 and less than
 	 * string length.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a wild combination of javascript standard method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty">
@@ -1453,7 +1412,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * be replaced with something like this: <blockquote><code>obj.has(index, true);</code></blockquote> And following
 	 * expression: <blockquote> <code>_.hasIn(obj, index);</code></blockquote> can be replaced with something like this:
 	 * <blockquote><code>obj.has(index, false);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param index position of value, which will be checked.
 	 * @param own if true method will scan only current container for an index; otherwise it will also search among
@@ -1478,7 +1436,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Checks if specified property exists in the current container. If own parameter is true method will scan only
 	 * current container for a property, otherwise it will also search among inherited properties from the prototype.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a wild combination of javascript standard method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty">
@@ -1489,7 +1446,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * <code>obj.has(property, true);</code></blockquote> And following expression: <blockquote>
 	 * <code>_.hasIn(obj, property);</code></blockquote> can be replaced with something like this: <blockquote>
 	 * <code>obj.has(property, false);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param property name of the property, which will be checked.
 	 * @param own if true method will scan only current container for a property; otherwise it will also search among
@@ -1525,7 +1481,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	
 	/**
 	 * This method has two different algorithms depending on the current container type:
-	 * 
 	 * <p>
 	 * 1) If current container is a STRING LITERAL, then method will convert given value to a STRING LITERAL and will
 	 * return the index in the current string of the first occurence of the specified substring. If substring won't be
@@ -1533,7 +1488,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf">String.
 	 * prototype.indexOf()</a>, except parameter fromIndex isn't implemented. To find substring method checks not only
 	 * current container, but the whole prototype chain.
-	 * </p>
 	 * <p>
 	 * 2) If current container is an ARRAY, then method will return first index at which a given value can be found in
 	 * the ARRAY container. For comparison method {@link #equals(Object)} will be used. If value won't be found, then
@@ -1541,11 +1495,9 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf">Array.
 	 * prototype.indexOf()</a>, except parameter fromIndex isn't implemented. To find the value method checks not only
 	 * current container, but the whole prototype chain.
-	 * </p>
 	 * <p>
 	 * 3) For all other containers this method will throw {@link ContainerException} with a description that this method
 	 * is not supported.
-	 * </p>
 	 * 
 	 * @param value any value that will be searched in the container.
 	 * @return integer that represents index number in container or -1 if nothing is found.
@@ -1606,7 +1558,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	/**
 	 * Returns a set of all indexes/properties of the current container. If <b>own</b> parameter is false, all own and
 	 * all inherited indexes/properties will be returned.
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this method is a wild combination of javascript standard method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys"> Object.
@@ -1616,7 +1567,6 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * with something like this: <blockquote> <code>obj.keys(true);</code></blockquote> And following expression:
 	 * <blockquote> <code>_.keysIn(obj);</code></blockquote> can be replaced with something like this: <blockquote>
 	 * <code>obj.keys(false);</code></blockquote>
-	 * </p>
 	 * 
 	 * @param own if true only own indexes/properties will be returned, otherwise all indexes/properties will be
 	 *            returned, including inhereted ones.
@@ -1664,16 +1614,12 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * containers or containers, which have an ARRAY in their prototype chain, for all other containers this method will
 	 * throw {@link ContainerException}. To get the value method checks not only current container, but the whole
 	 * prototype chain.
-	 * 
 	 * <p>
 	 * <b>Note:</b> this method mutates current container.
-	 * </p>
-	 * 
 	 * <p>
 	 * <b>Javascript Note:</b> this is a precise implementation of javascript method
 	 * <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop">Array.
 	 * prototype.pop()</a>.
-	 * </p>
 	 * 
 	 * @return value, which is the last in the array; UNDEFINED container will be returned if current container is
 	 *         empty.
@@ -1885,6 +1831,7 @@ public class UniversalContainer implements Iterable<UniversalContainer>
 	 * A shortcut to the {@link Lodash#isEqual(UniversalContainer, Object)} method. This method works as if invoking it
 	 * were equivalent to evaluating the expression: <blockquote><code>Lodash.isEqual(this, other);</code></blockquote>
 	 * 
+	 * @param other value of any class to compare with the current container
 	 * @return true if the current container and other value are equivalent; false otherwise.
 	 */
 	public boolean deepEquals(Object other)

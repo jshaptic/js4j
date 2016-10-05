@@ -27,3 +27,11 @@ jacocoTestReport {
         xml.enabled = true
     }
 }
+
+javadoc {
+	options {
+		memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PUBLIC
+		encoding = 'UTF-8'
+		linksOffline 'https://docs.oracle.com/javase/8/docs/api/', 'https://docs.oracle.com/javase/8/docs/api/'
+	}
+}
