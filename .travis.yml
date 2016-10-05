@@ -8,7 +8,7 @@ notifications:
   email: false
   
 after_success:
-  - ./gradlew check jacocoTestReport coveralls --stacktrace
+  - ./gradlew check jacocoTestReport coveralls --info
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
