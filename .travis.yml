@@ -21,7 +21,7 @@ after_failure:
 deploy:
   provider: bintray
   file: build/travis/bintray.json
-  user: $USER
+  user: jshaptic
   key: $BINTRAY_API_KEY
   dry-run: true
 
