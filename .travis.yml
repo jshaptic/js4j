@@ -1,18 +1,31 @@
 language: java
-
 jdk:
   - oraclejdk8
   - oraclejdk7
   
+# Build settings
+sudo: false
 notifications:
   email: false
   
+# If build was successfull run tests and code coverage
 after_success:
   - ./gradlew check jacocoTestReport coveralls
+  - echo $USER
   
+# Output all test results in case of the build failure
 after_failure:
-  - cat build/test-results/test/*.xml 
+  - cat build/test-results/test/*.xml
+  
+# Deployment settings, file bintray.json is geneterated by gradle
+deploy:
+  provider: bintray
+  file: build/travis/bintray.json
+  user: $USER
+  key: $BINTRAY_API_KEY
+  dry-run: true
 
+# Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
