@@ -34,6 +34,12 @@ javadoc {
 	}
 }
 
+release {
+	git {
+		requireBranch = 'develop'
+	}
+}
+
 wrapper {
     gradleVersion = '3.1'
 }
