@@ -13,7 +13,7 @@ def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
 // Validates current repository state and will stop execution if something is wrong
 task gitReadyForRelease(group: 'git') << {
 	// fetch changes from all remote branches
-	grgit.fetch(tagMode: FetchOp.TagMode.ALL)
+	grgit.fetch(tagMode: org.ajoberstar.grgit.operation.FetchOp.TagMode.ALL)
 	
 	// collect statuses for all local branches
 	def masterStatus = grgit.branch.status(name: project.gitMasterBranch)
@@ -34,26 +34,41 @@ task gitReadyForRelease(group: 'git') << {
 		throw new GradleException("Version '" + project.version + "' was already released!")
 }
 
-task gitSwitchToMaster(group: 'git') << {
-	grgit.checkout(branch: project.gitMasterBranch)
+task gitSwitchToMaster(group: 'git') {
+	mustRunAfter(gitReadyForRelease)
+	doLast {
+		grgit.checkout(branch: project.gitMasterBranch)
+	}
 }
 
-task gitMergeWithMaster(group: 'git') << {
-	grgit.merge(mode: MergeOp.Mode.ONLY_FF, head: project.gitDevelopmentBranch)
+task gitMergeWithMaster(group: 'git') {
+	mustRunAfter(gitSwitchToMaster)
+	doLast {
+		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF, head: project.gitDevelopmentBranch)
+	}
 }
 
-task gitCreateVersionTag(group: 'git') << {
-	grgit.tag.add(name: project.version)
+task gitCreateVersionTag(group: 'git') {
+	mustRunAfter(gitMergeWithMaster)
+	doLast {
+		grgit.tag.add(name: project.version)
+	}
 }
 
-task gitReleaseMaster(group: 'git') << {
-	grgit.commit(message: 'Testing gradle config')
+task gitReleaseMaster(group: 'git') {
+	mustRunAfter(gitCreateVersionTag)
+	doLast {
+		grgit.commit(message: 'Testing gradle config')
+	}
 }
 
-task gitSwitchToDev(group: 'git') << {
-	grgit.checkout(branch: project.gitDevelopmentBranch)
+task gitSwitchToDev(group: 'git') {
+	mustRunAfter(gitReleaseMaster)
+	doLast {
+		grgit.checkout(branch: project.gitDevelopmentBranch)
+	}
 }
 
-task gitTest(dependsOn: ['gitReadyForRelease','gitSwitchToMaster','gitMergeWithMaster','gitCreateVersionTag','gitReleaseMaster','gitSwitchToDev']) << {
+task gitRelease(dependsOn: ['gitReadyForRelease','gitSwitchToMaster','gitMergeWithMaster','gitCreateVersionTag','gitReleaseMaster','gitSwitchToDev']) << {
 	println 'RELEASE OK!!!!!!!'
 }
