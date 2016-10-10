@@ -2,43 +2,15 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.6.3'
-    id 'net.researchgate.release' version '2.4.0'
+    //id 'net.researchgate.release' version '2.4.0'
+    //id 'org.ajoberstar.grgit' version '1.5.1'
 }
 
-repositories {
-    jcenter()
-}
-
-dependencies {
-    compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
-    compile 'com.google.code.gson:gson:2.7'
-    testCompile 'org.testng:testng:6.9.13.6'
-}
-
-test {
-	useTestNG()
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-    }
-}
-
-javadoc {
-	options {
-		memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PUBLIC
-		encoding = 'UTF-8'
-		linksOffline 'https://docs.oracle.com/javase/8/docs/api/', 'https://docs.oracle.com/javase/8/docs/api/'
-	}
-}
-
-release {
-	git {
-		requireBranch = 'develop'
-	}
-}
+apply from: 'gradle/dependencies.gradle'
+apply from: 'gradle/javadoc.gradle'
+apply from: 'gradle/testing.gradle'
+apply from: 'gradle/git.gradle'
+apply from: 'gradle/travis.gradle'
 
 wrapper {
     gradleVersion = '3.1'

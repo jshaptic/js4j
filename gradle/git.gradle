@@ -1,0 +1,59 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'org.ajoberstar:gradle-git:1.5.1'
+	}
+}
+
+// Define global git object
+def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
+
+// Validates current repository state and will stop execution if something is wrong
+task gitReadyForRelease(group: 'git') << {
+	// fetch changes from all remote branches
+	grgit.fetch(tagMode: FetchOp.TagMode.ALL)
+	
+	// collect statuses for all local branches
+	def masterStatus = grgit.branch.status(name: project.gitMasterBranch)
+	def devStatus = grgit.branch.status(name: project.gitDevelopmentBranch)
+	
+	// validation rules
+	
+	if (masterStatus.aheadCount != 0 || masterStatus.behindCount != 0)
+		throw new GradleException("Your master branch is not synced with remote!")
+		
+	if (devStatus.aheadCount != 0 || devStatus.behindCount != 0)
+		throw new GradleException("Your development branch is not synced with remote!")
+	
+	if (!grgit.status().isClean())
+		throw new GradleException("Your repository is not clean, there are some uncommitted changes or conflicts!")
+		
+	if (grgit.tag.list().contains(project.version))
+		throw new GradleException("Version '" + project.version + "' was already released!")
+}
+
+task gitSwitchToMaster(group: 'git') << {
+	grgit.checkout(branch: project.gitMasterBranch)
+}
+
+task gitMergeWithMaster(group: 'git') << {
+	grgit.merge(mode: MergeOp.Mode.ONLY_FF, head: project.gitDevelopmentBranch)
+}
+
+task gitCreateVersionTag(group: 'git') << {
+	grgit.tag.add(name: project.version)
+}
+
+task gitReleaseMaster(group: 'git') << {
+	grgit.commit(message: 'Testing gradle config')
+}
+
+task gitSwitchToDev(group: 'git') << {
+	grgit.checkout(branch: project.gitDevelopmentBranch)
+}
+
+task gitTest(dependsOn: ['gitReadyForRelease','gitSwitchToMaster','gitMergeWithMaster','gitCreateVersionTag','gitReleaseMaster','gitSwitchToDev']) << {
+	println 'RELEASE OK!!!!!!!'
+}
