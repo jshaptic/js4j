@@ -1,0 +1,9 @@
+test {
+	useTestNG()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+    }
+}
