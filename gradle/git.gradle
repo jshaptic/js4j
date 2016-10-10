@@ -1,0 +1,52 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'org.ajoberstar:gradle-git:1.5.1'
+	}
+}
+
+//TODO: check version in git
+//TODO: fetch current master and develop branches?
+
+// Define global git object
+def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
+
+// Validates current repository state and will stop execution if something is wrong
+task gitReadyForRelease(group: 'git') << {
+	def masterStatus = grgit.branch.status(name: gitMasterBranch)
+	def devStatus = grgit.branch.status(name: gitDevelopmentBranch)
+	def branch = grgit.branch.getCurrent().getName()
+	
+	if (masterStatus.aheadCount != 0 || masterStatus.behindCount != 0)
+		throw new GradleException("Your master branch is out of date!")
+		
+	if (devStatus.aheadCount != 0 || devStatus.behindCount != 0)
+		throw new GradleException("Your development branch is out of date!")
+	
+	if (branch != gitDevelopmentBranch) {
+		throw new GradleException("Your current branch " + branch + ", which is not a " + gitDevelopmentBranch + " branch!")
+	}
+	if (!grgit.status().isClean()) {
+		throw new GradleException("Your repository is not clean, there are some uncommitted changes or conflicts!")
+	}
+}
+
+task gitSwitchToMaster(group: 'git') << {
+	grgit.checkout(branch: gitMasterBranch)
+	grgit.pull()
+}
+
+task gitMergeWithMaster(group: 'git') << {
+}
+
+task gitCreateVersionTag(group: 'git') << {
+}
+
+task gitReleaseMaster(group: 'git') << {
+}
+
+task gitSwitchToDev(group: 'git') << {
+	grgit.checkout(branch: gitDevelopmentBranch)
+}
