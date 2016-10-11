@@ -29,7 +29,7 @@ task gitReadyForRelease(group: 'git') << {
 	if (!grgit.status().isClean())
 		throw new GradleException("Your repository is not clean, there are some uncommitted changes or conflicts!")
 		
-	if (grgit.tag.list().contains(project.version))
+	if (grgit.tag.list().any{ it.getName() == project.version })
 		throw new GradleException("Version '" + project.version + "' was already released!")
 }
 
