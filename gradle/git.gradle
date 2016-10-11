@@ -51,7 +51,7 @@ task gitMergeWithMaster(group: "git") {
 	description "Merges all development changes with master branch, with --no-ff flag"
 	mustRunAfter gitSwitchToMaster
 	onlyIf {
-		// foolproof check to make sure commit and push will be executed only during release process
+		// foolproof check to make sure merge will be executed only during release process
 		gradle.taskGraph.hasTask(gitRelease) 
 	}
 	doLast {
