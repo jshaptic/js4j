@@ -20,7 +20,6 @@ task gitReadyForRelease(group: 'git') << {
 	def devStatus = grgit.branch.status(name: project.gitDevelopmentBranch)
 	
 	// validation rules
-	
 	if (masterStatus.aheadCount != 0 || masterStatus.behindCount != 0)
 		throw new GradleException("Your master branch is not synced with remote!")
 		
