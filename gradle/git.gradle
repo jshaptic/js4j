@@ -44,7 +44,7 @@ task gitSwitchToMaster(group: 'git') {
 task gitMergeWithMaster(group: 'git') {
 	mustRunAfter(gitSwitchToMaster)
 	doLast {
-		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF, head: project.gitDevelopmentBranch)
+		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.CREATE_COMMIT, head: project.gitDevelopmentBranch)
 	}
 }
 
@@ -69,6 +69,15 @@ task gitSwitchToDev(group: 'git') {
 	}
 }
 
-task gitRelease(dependsOn: ['gitReadyForRelease','gitSwitchToMaster','gitMergeWithMaster','gitCreateVersionTag','gitReleaseMaster','gitSwitchToDev']) << {
-	println 'RELEASE OK!!!!!!!'
+task gitRelease() {
+	dependsOn(gitReadyForRelease)
+	dependsOn(gitSwitchToMaster)
+	dependsOn(gitMergeWithMaster)
+	dependsOn(gitCreateVersionTag)
+	dependsOn(gitReleaseMaster)
+	dependsOn(gitSwitchToDev)
+	
+	doLast {
+		println 'RELEASE OK!!!!!!!'
+	}
 }
