@@ -2,8 +2,6 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.6.3'
-    //id 'net.researchgate.release' version '2.4.0'
-    //id 'org.ajoberstar.grgit' version '1.5.1'
 }
 
 apply from: 'gradle/dependencies.gradle'
