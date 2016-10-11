@@ -59,6 +59,7 @@ task gitReleaseMaster(group: 'git') {
 	doLast {
 		grgit.commit(message: 'Testing gradle config')
 		grgit.push()
+		grgit.push(tags: true)
 	}
 }
 
