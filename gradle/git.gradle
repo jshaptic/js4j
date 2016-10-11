@@ -58,6 +58,7 @@ task gitReleaseMaster(group: 'git') {
 	mustRunAfter(gitCreateVersionTag)
 	doLast {
 		grgit.commit(message: 'Testing gradle config')
+		grgit.push()
 	}
 }
 
