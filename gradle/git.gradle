@@ -32,7 +32,7 @@ task gitReadyForRelease(group: "git") {
 			throw new GradleException("Your repository is not clean, there are some uncommitted changes or conflicts!")
 			
 		if (project.version.endsWith("SNAPSHOT"))
-			throw new GradleException("Your current version is a snapshot version, please change it in properties file!")
+			throw new GradleException("Your current version is a snapshot version, change it in gradle.properties file!")
 		
 		if (grgit.tag.list().any{ it.getName() == project.version })
 			throw new GradleException("Version '" + project.version + "' was already released!")
@@ -50,6 +50,10 @@ task gitSwitchToMaster(group: "git") {
 task gitMergeWithMaster(group: "git") {
 	description "Merges all development changes with master branch, with --no-ff flag"
 	mustRunAfter gitSwitchToMaster
+	onlyIf {
+		// foolproof check to make sure commit and push will be executed only during release process
+		gradle.taskGraph.hasTask(gitRelease) 
+	}
 	doLast {
 		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.CREATE_COMMIT, head: project.gitDevBranch)
 	}
@@ -69,6 +73,10 @@ task gitCreateVersionTag(group: "git") {
 task gitPushToMaster(group: "git") {
 	description "Pushes all merged changes and created tag to remote master branch"
 	mustRunAfter gitCreateVersionTag
+	onlyIf {
+		// foolproof check to make sure commit and push will be executed only during release process
+		gradle.taskGraph.hasTask(gitRelease)
+	}
 	doLast {
 		grgit.commit(message: gitReleaseCommitMessage + " '" + project.version + "'")
 		grgit.push()
@@ -84,7 +92,7 @@ task gitSwitchToDev(group: "git") {
 	}
 }
 
-task gitRelease(group: "git") {
+task gitRelease(group: "release") {
 	description "Merges development changes to master branch and pushes all changes to remote"
 	dependsOn gitReadyForRelease
 	dependsOn gitSwitchToMaster
