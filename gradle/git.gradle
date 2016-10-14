@@ -1,10 +1,10 @@
-// Define own repository and dependency for this script, since in Gradle it's impossible to define global repository
+// Define own repository and dependency for this script, since in Gradle it"s impossible to define global repository
 buildscript {
 	repositories {
 		jcenter()
 	}
 	dependencies {
-		classpath 'org.ajoberstar:gradle-git:1.5.1'
+		classpath "org.ajoberstar:gradle-git:1.5.1"
 	}
 }
 
@@ -35,7 +35,7 @@ task gitReadyForRelease(group: "git") {
 			throw new GradleException("Your current version is a snapshot version, change it in gradle.properties file!")
 		
 		if (grgit.tag.list().any{ it.getName() == project.version })
-			throw new GradleException("Version '" + project.version + "' was already released!")
+			throw new GradleException("Version '${project.version}' was already released!")
 	}
 }
 
@@ -63,7 +63,7 @@ task gitCreateVersionTag(group: "git") {
 	description "Creates tag for current version, task will be skipped if SNAPSHOT version is used"
 	mustRunAfter gitMergeWithMaster
 	onlyIf {
-		project.hasProperty('version') && !project.version.endsWith("SNAPSHOT")
+		project.hasProperty("version") && !project.version.endsWith("SNAPSHOT")
 	}
 	doLast {
 		grgit.tag.add(name: project.version)
@@ -78,7 +78,7 @@ task gitPushToMaster(group: "git") {
 		gradle.taskGraph.hasTask(gitRelease)
 	}
 	doLast {
-		grgit.commit(message: gitReleaseCommitMessage + " '" + project.version + "'")
+		grgit.commit(message: "[RELEASE] - new version commit: '${project.version}'.")
 		grgit.push()
 		grgit.push(tags: true)
 	}

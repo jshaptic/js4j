@@ -1,0 +1,12 @@
+// Setup maven publishing task, which is used by bintray and artifactory tasks
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+			groupId project.group
+			artifactId project.name
+			version project.version
+			
+            from components.java
+        }
+    }
+}

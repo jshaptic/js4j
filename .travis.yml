@@ -7,11 +7,15 @@ jdk:
 sudo: false
 notifications:
   email: false
-  
-# If build was successfull run tests and code coverage
-after_success:
-  - ./gradlew check jacocoTestReport coveralls
-  
+
+# skip default travis installation task
+install:
+  - echo "skip default gradlew assemble"
+
+# execute custom script instead of default travis execution
+script:
+  - ./gradlew check jacocoTestReport coveralls travisPublish
+
 # Output all test results in case of the build failure
 after_failure:
   - cat build/test-results/test/*.xml
@@ -24,3 +28,4 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.m2/repositories/
