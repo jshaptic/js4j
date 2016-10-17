@@ -14,7 +14,10 @@ install:
 
 # execute custom script instead of default travis execution
 script:
-  - ./gradlew check jacocoTestReport coveralls travisPublish
+  - ./gradlew check jacocoTestReport coveralls
+
+after_success:
+  - ./gradlew travisPublish
 
 # Output all test results in case of the build failure
 after_failure:
