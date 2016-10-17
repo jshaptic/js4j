@@ -1,3 +1,8 @@
+// add javadoc/source jar tasks as artifacts
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
 // Setup maven publishing task, which is used by bintray and artifactory tasks
 publishing {
     publications {
@@ -7,6 +12,14 @@ publishing {
 			version project.version
 			
             from components.java
+            
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
         }
     }
 }
