@@ -16,12 +16,14 @@ install:
 script:
   - ./gradlew check jacocoTestReport coveralls
 
-after_success:
-  - ./gradlew travisPublish
-
 # Output all test results in case of the build failure
 after_failure:
   - cat build/test-results/test/*.xml
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./gradlew travisPublish
 
 # Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
