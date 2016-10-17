@@ -20,13 +20,14 @@ script:
 after_failure:
   - cat build/test-results/test/*.xml
 
+# Deploy snapshot version or release version, depending on the branch
 deploy:
   provider: script
-  script: ./gradlew travisPublish
+  script: ./gradlew deploy
   skip_cleanup: true
   on:
-    jdk: oraclejdk7
     all_branches: true
+    jdk: oraclejdk7
 
 # Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:

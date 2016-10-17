@@ -16,7 +16,7 @@ apply from: "gradle/git.gradle"				// setup git tasks
 apply from: "gradle/publishing.gradle"		// setup maven publishing settings and tasks
 apply from: "gradle/artifactory.gradle"		// setup jfrog artifactory settings and tasks 
 apply from: "gradle/bintray.gradle"			// setup jfrog bintray settings and tasks
-apply from: "gradle/travis.gradle"			// setup travis tasks
+apply from: "gradle/deployment.gradle"		// setup deployment settings and tasks
 
 wrapper {
     gradleVersion = "3.1"					// setup gradle version
