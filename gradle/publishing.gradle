@@ -1,6 +1,68 @@
-// add javadoc/source jar tasks as artifacts
+// Calculate deployment date and time
+import java.text.SimpleDateFormat
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat("yyyy-MM-dd").format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat("HH:mm:ss.SSSZ").format(buildTimeAndDate)
+}
+
+// Setup manifest file
+jar {
+    manifest {
+        attributes(
+            "Built-By": System.properties["user.name"],
+            "Created-By": System.properties["java.version"] + " (" + System.properties["java.vendor"] + " " + System.properties["java.vm.version"] + ")",
+            "Build-Date": project.buildDate,
+            "Build-Time": project.buildTime,
+            "Name": project.group.replace(".","/"),
+            "Specification-Title": project.name,
+            "Specification-Version": project.version,
+            "Specification-Vendor": "Eugene Shatilo",
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.version,
+            "Implementation-Vendor": "Eugene Shatilo"
+        )
+    }
+}
+
+// Add javadoc/source jar tasks as artifacts
 artifacts {
     archives sourcesJar, javadocJar
+}
+
+// Create additional pom.xml properties 
+def pomConfig = {
+    name project.name
+    description project.description
+    url project.websiteUrl
+    inceptionYear "2016"
+    licenses {
+        license([:]) {
+            name "MIT License"
+            url "https://opensource.org/licenses/MIT"
+            distribution "repo"
+        }
+    }
+    scm {
+        url project.websiteUrl
+    }
+    issueManagement {
+    	system "GitHub Issues"
+    	url project.issuesUrl
+    }
+    developers {
+        [
+            jshaptic : "Eugene Shatilo"
+        ].each { devId, devName ->
+            developer {
+                id devId
+                name devName
+                roles {
+                    role "Developer"
+                }
+            }
+        }
+    }
 }
 
 // Setup maven publishing task, which is used by bintray and artifactory tasks
@@ -19,6 +81,10 @@ publishing {
 
             artifact javadocJar {
                 classifier "javadoc"
+            }
+            
+            pom.withXml {
+                asNode().children().last() + pomConfig
             }
         }
     }
