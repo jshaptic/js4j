@@ -21,9 +21,12 @@ after_failure:
   - cat build/test-results/test/*.xml
 
 deploy:
-  skip_cleanup: true
   provider: script
   script: ./gradlew travisPublish
+  skip_cleanup: true
+  on:
+    jdk: oraclejdk7
+    all_branches: true
 
 # Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
