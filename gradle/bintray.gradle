@@ -5,20 +5,20 @@ bintray {
     key = bintrayKey
     publications = ["mavenJava"]
     pkg {
-        repo = "maven"
+        repo = project.bintrayRepoName
         name = project.name
         desc = project.description
         websiteUrl = project.websiteUrl
         issueTrackerUrl = project.issuesUrl
         vcsUrl = project.scmUrl
-        licenses = project.licenses.split(",")
+        licenses = project.licenses.name 
         labels = project.labels.split(",")
         publicDownloadNumbers = true
-        githubRepo = "jshaptic/js4j"
-        githubReleaseNotesFile  = "README.md"
+        githubRepo = project.bintrayGHRepoName
+        githubReleaseNotesFile  = project.bintrayGHReleaseNotesFile
         version {
             name = project.version
-            desc = "Version ${project.version} of the '${project.name}' library"
+            desc = "Version '${project.version}' of the '${project.name}' library"
             released = new Date()
             vcsTag = project.version
             gpg {

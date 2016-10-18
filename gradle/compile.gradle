@@ -1,14 +1,15 @@
-sourceCompatibility=1.7
-targetCompatibility=1.7
-compileJava.options.encoding = "UTF-8"
+// Setup compile settings
+sourceCompatibility = project.javaVersion
+targetCompatibility = project.javaVersion
+compileJava.options.encoding = project.defaultEncoding
 
-// custom task for creating source jar
+// Custom task for creating source jar
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = "sources"
     from sourceSets.main.allSource
 }
 
-// custom task for creating javadoc jar
+// Custom task for creating javadoc jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = "javadoc"
     from javadoc.destinationDir

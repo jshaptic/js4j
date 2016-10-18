@@ -1,0 +1,33 @@
+import java.text.SimpleDateFormat
+
+ext {
+    // initialize build date and time
+    Date buildTimeAndDate = new Date()
+    buildDate = new SimpleDateFormat("yyyy-MM-dd").format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat("HH:mm:ss.SSSZ").format(buildTimeAndDate)
+    
+    // initialize licenses property
+    licenses = []
+	properties.findAll{ it.key.startsWith("license") && it.value instanceof String }.each { k, v ->
+		def l = v.split(",")
+		if (l.size() > 0 && l[0])
+			licenses.add([name: l[0], url: l.size() > 1 ? l[1] : ""])
+		else
+			throw new GradleException("One of the license properties '${k}' is empty!")
+	}
+	
+	// initialize developers property
+	developers = []
+	properties.findAll{ it.key.startsWith("developer") && it.value instanceof String }.each { k, v ->
+		def d = v.split(",")
+		if (d.size() > 1)
+			developers.add([id: d[0], name: d[1]])
+		else
+			throw new GradleException("One of the developer properties '${k}' doesn't have id or name or both!")
+	}
+	
+	// initialize helper property method
+	setExtValue = { String property, String systemenv ->
+    	project.ext."$property" = project.hasProperty(property) ? project.getProperty(property) : System.getenv(systemenv)
+    }
+}

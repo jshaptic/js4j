@@ -1,11 +1,3 @@
-// Calculate deployment date and time
-import java.text.SimpleDateFormat
-Date buildTimeAndDate = new Date()
-ext {
-    buildDate = new SimpleDateFormat("yyyy-MM-dd").format(buildTimeAndDate)
-    buildTime = new SimpleDateFormat("HH:mm:ss.SSSZ").format(buildTimeAndDate)
-}
-
 // Setup manifest file
 jar {
     manifest {
@@ -14,13 +6,13 @@ jar {
             "Created-By": System.properties["java.version"] + " (" + System.properties["java.vendor"] + " " + System.properties["java.vm.version"] + ")",
             "Build-Date": project.buildDate,
             "Build-Time": project.buildTime,
-            "Name": "com/github/jshaptic/js4j",
+            "Name": project.packageName,
             "Specification-Title": project.name,
             "Specification-Version": project.version,
-            "Specification-Vendor": "Eugene Shatilo",
+            "Specification-Vendor": project.packageVendor,
             "Implementation-Title": project.name,
             "Implementation-Version": project.version,
-            "Implementation-Vendor": "Eugene Shatilo"
+            "Implementation-Vendor": project.packageVendor
         )
     }
 }
@@ -35,28 +27,30 @@ def pomConfig = {
     name project.name
     description project.description
     url project.websiteUrl
-    inceptionYear "2016"
+    inceptionYear project.inceptionYear
     licenses {
-        license([:]) {
-            name "MIT License"
-            url "https://opensource.org/licenses/MIT"
-            distribution "repo"
+        project.licenses.each {
+            license {
+	            name it.name
+	            url it.url
+	            distribution "repo"
+            }
         }
     }
     scm {
-        url project.websiteUrl
+        connection project.scmROConnection
+        developerConnection project.scmRWConnection
+        url project.scmUrl
     }
     issueManagement {
-    	system "GitHub Issues"
+    	system project.issuesSystem
     	url project.issuesUrl
     }
     developers {
-        [
-            jshaptic : "Eugene Shatilo"
-        ].each { devId, devName ->
+        project.developers.each {
             developer {
-                id devId
-                name devName
+                id it.id
+                name it.name
                 roles {
                     role "Developer"
                 }

@@ -1,9 +1,9 @@
 // Setup artifactory task, twhich is used to upload snapshot builds to JFrog's OSS Artifactory 
 artifactory {
-	contextUrl = "http://oss.jfrog.org/artifactory"
+	contextUrl = project.artifactoryContextUrl
     publish {
         repository {
-            repoKey = "oss-snapshot-local"
+            repoKey = project.artifactoryRepoName
             username = bintrayUsername
             password = bintrayKey
         }
