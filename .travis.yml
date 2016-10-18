@@ -27,7 +27,7 @@ deploy:
   skip_cleanup: true
   on:
     all_branches: true
-    jdk: oraclejdk7
+    jdk: oraclejdk8
 
 # Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
