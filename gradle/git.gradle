@@ -1,84 +1,107 @@
+// Define own repository and dependency for this script, since in Gradle it"s impossible to define global repository
 buildscript {
 	repositories {
 		jcenter()
 	}
 	dependencies {
-		classpath 'org.ajoberstar:gradle-git:1.5.1'
+		classpath "org.ajoberstar:gradle-git:1.5.1"
 	}
 }
 
 // Define global git object
 def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
 
-// Validates current repository state and will stop execution if something is wrong
-task gitReadyForRelease(group: 'git') << {
-	// fetch changes from all remote branches
-	grgit.fetch(tagMode: org.ajoberstar.grgit.operation.FetchOp.TagMode.ALL)
-	
-	// collect statuses for all local branches
-	def masterStatus = grgit.branch.status(name: project.gitMasterBranch)
-	def devStatus = grgit.branch.status(name: project.gitDevelopmentBranch)
-	
-	// validation rules
-	if (masterStatus.aheadCount != 0 || masterStatus.behindCount != 0)
-		throw new GradleException("Your master branch is not synced with remote!")
+task gitReadyForRelease(group: "git") {
+	description "Fetch all remotes, validates current repository state and will stop execution if something is wrong"
+	doLast {
+		// fetch changes from all remote branches
+		grgit.fetch(tagMode: org.ajoberstar.grgit.operation.FetchOp.TagMode.ALL)
 		
-	if (devStatus.aheadCount != 0 || devStatus.behindCount != 0)
-		throw new GradleException("Your development branch is not synced with remote!")
-	
-	if (!grgit.status().isClean())
-		throw new GradleException("Your repository is not clean, there are some uncommitted changes or conflicts!")
+		// collect statuses for all local branches
+		def masterStatus = grgit.branch.status(name: project.gitMasterBranch)
+		def devStatus = grgit.branch.status(name: project.gitDevBranch)
 		
-	if (grgit.tag.list().any{ it.getName() == project.version })
-		throw new GradleException("Version '" + project.version + "' was already released!")
+		// validation rules
+		if (masterStatus.aheadCount != 0 || masterStatus.behindCount != 0)
+			throw new GradleException("Your master branch is not synced with remote!")
+			
+		if (devStatus.aheadCount != 0 || devStatus.behindCount != 0)
+			throw new GradleException("Your development branch is not synced with remote!")
+		
+		if (!grgit.status().isClean())
+			throw new GradleException("Your repository is not clean, there are some uncommitted changes or conflicts!")
+			
+		if (project.version.endsWith("SNAPSHOT"))
+			throw new GradleException("Your current version is a snapshot version, change it in gradle.properties file!")
+		
+		if (grgit.tag.list().any{ it.getName() == project.version })
+			throw new GradleException("Version '${project.version}' was already released!")
+	}
 }
 
-task gitSwitchToMaster(group: 'git') {
-	mustRunAfter(gitReadyForRelease)
+task gitSwitchToMaster(group: "git") {
+	description "Checkout master branch"
+	mustRunAfter gitReadyForRelease
 	doLast {
 		grgit.checkout(branch: project.gitMasterBranch)
 	}
 }
 
-task gitMergeWithMaster(group: 'git') {
-	mustRunAfter(gitSwitchToMaster)
+task gitMergeWithMaster(group: "git") {
+	description "Merges all development changes with master branch, with --no-ff flag"
+	mustRunAfter gitSwitchToMaster
+	onlyIf {
+		// foolproof check to make sure merge will be executed only during release process
+		gradle.taskGraph.hasTask(gitRelease) 
+	}
 	doLast {
-		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.CREATE_COMMIT, head: project.gitDevelopmentBranch)
+		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.CREATE_COMMIT, head: project.gitDevBranch)
 	}
 }
 
-task gitCreateVersionTag(group: 'git') {
-	mustRunAfter(gitMergeWithMaster)
+task gitCreateVersionTag(group: "git") {
+	description "Creates tag for current version, task will be skipped if SNAPSHOT version is used"
+	mustRunAfter gitMergeWithMaster
+	onlyIf {
+		project.hasProperty("version") && !project.version.endsWith("SNAPSHOT") && (!project.hasProperty("skipVersionTagCreation") || !project.skipVersionTagCreation)
+	}
 	doLast {
-		grgit.tag.add(name: project.version)
+		grgit.tag.add(name: "v" + project.version)
 	}
 }
 
-task gitReleaseMaster(group: 'git') {
-	mustRunAfter(gitCreateVersionTag)
+task gitPushToMaster(group: "git") {
+	description "Pushes all merged changes and created tag to remote master branch"
+	mustRunAfter gitCreateVersionTag
+	onlyIf {
+		// foolproof check to make sure commit and push will be executed only during release process
+		gradle.taskGraph.hasTask(gitRelease)
+	}
 	doLast {
-		grgit.commit(message: 'Testing gradle config')
+		grgit.commit(message: "[RELEASE] - new version commit: '${project.version}'.")
 		grgit.push()
 		grgit.push(tags: true)
 	}
 }
 
-task gitSwitchToDev(group: 'git') {
-	mustRunAfter(gitReleaseMaster)
+task gitSwitchToDev(group: "git") {
+	description "Checkout development branch back"
+	mustRunAfter gitPushToMaster
 	doLast {
-		grgit.checkout(branch: project.gitDevelopmentBranch)
+		grgit.checkout(branch: project.gitDevBranch)
 	}
 }
 
-task gitRelease() {
-	dependsOn(gitReadyForRelease)
-	dependsOn(gitSwitchToMaster)
-	dependsOn(gitMergeWithMaster)
-	dependsOn(gitCreateVersionTag)
-	dependsOn(gitReleaseMaster)
-	dependsOn(gitSwitchToDev)
-	
+task gitRelease(group: "release") {
+	description "Merges development changes to master branch and pushes all changes to remote"
+	dependsOn gitReadyForRelease
+	dependsOn gitSwitchToMaster
+	dependsOn gitMergeWithMaster
+	dependsOn gitCreateVersionTag
+	dependsOn gitPushToMaster
+	dependsOn gitSwitchToDev
 	doLast {
-		println 'RELEASE OK!!!!!!!'
+		println "Source code was successfully released to master branch!"
+		println "Now check build status on CI server and check if it was correctly published"
 	}
 }
