@@ -49,7 +49,7 @@ def pomConfig = {
     developers {
         project.developers.each { dev ->
             developer {
-                id devd.id
+                id dev.id
                 name dev.name
                 roles {
                     role "Developer"
