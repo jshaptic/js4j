@@ -63,10 +63,10 @@ task gitCreateVersionTag(group: "git") {
 	description "Creates tag for current version, task will be skipped if SNAPSHOT version is used"
 	mustRunAfter gitMergeWithMaster
 	onlyIf {
-		project.hasProperty("version") && !project.version.endsWith("SNAPSHOT")
+		project.hasProperty("version") && !project.version.endsWith("SNAPSHOT") && (!project.hasProperty("skipVersionTagCreation") || !project.skipVersionTagCreation)
 	}
 	doLast {
-		grgit.tag.add(name: project.version)
+		grgit.tag.add(name: "v" + project.version)
 	}
 }
 
