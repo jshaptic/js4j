@@ -29,10 +29,10 @@ def pomConfig = {
     url project.websiteUrl
     inceptionYear project.inceptionYear
     licenses {
-        project.licenses.each {
+        project.licenses.each { lic ->
             license {
-	            name it.name
-	            url it.url
+	            name lic.name
+	            url lic.url
 	            distribution "repo"
             }
         }
@@ -47,10 +47,10 @@ def pomConfig = {
     	url project.issuesUrl
     }
     developers {
-        project.developers.each {
+        project.developers.each { dev ->
             developer {
-                id it.id
-                name it.name
+                id devd.id
+                name dev.name
                 roles {
                     role "Developer"
                 }
