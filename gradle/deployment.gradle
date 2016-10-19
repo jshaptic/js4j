@@ -14,10 +14,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 		if (System.getenv("TRAVIS_BRANCH") != gitMasterBranch)
 			bintrayUpload.enabled = false
 		
-		if (!project.version.endsWith("SNAPSHOT"))
+		if (bintrayUpload.enabled)
 			artifactoryPublish.enabled = false
-			
-		if (!artifactoryPublish.enabled && !bintrayUpload.enabled)
-			throw new GradleException("Due to incorrect version setup or brunch build cannot be deployed!")
 	}
 }
