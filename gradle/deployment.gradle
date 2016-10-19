@@ -16,8 +16,5 @@ gradle.taskGraph.whenReady { taskGraph ->
 		
 		if (!project.version.endsWith("SNAPSHOT"))
 			artifactoryPublish.enabled = false
-			
-		if (!artifactoryPublish.enabled && !bintrayUpload.enabled)
-			throw new GradleException("Due to incorrect version setup or brunch build cannot be deployed!")
 	}
 }

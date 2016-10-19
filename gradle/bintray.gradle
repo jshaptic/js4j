@@ -23,7 +23,7 @@ bintray {
             vcsTag = project.version
             gpg {
             	sign = true
-            	passphrase = bintrayGpgPassword
+            	passphrase = System.getenv("BINTRAY_GPG_PASSWORD")
             }
         }
     }
