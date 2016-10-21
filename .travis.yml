@@ -23,10 +23,10 @@ after_failure:
 # Deploy snapshot version or release version, depending on the branch
 deploy:
   provider: script
-  script: ./gradlew deploy
+  script: ./gradlew travisDeploy
   skip_cleanup: true
   on:
-    all_branches: true
+    condition: $TRAVIS_TAG = ''
     jdk: oraclejdk8
 
 # Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching

@@ -2,8 +2,8 @@ plugins {
     id "java"
     id "jacoco"
     id "maven-publish"
-	id "com.jfrog.artifactory" version "4.4.0"
-    id "com.jfrog.bintray" version "1.7"
+	id "com.jfrog.artifactory" version "4.4.7"
+    id "com.jfrog.bintray" version "1.7.2"
     id "com.github.kt3k.coveralls" version "2.6.3"
 }
 
