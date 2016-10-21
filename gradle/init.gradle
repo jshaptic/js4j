@@ -28,6 +28,7 @@ ext {
 	
 	// initialize helper property method
 	setExtValue = { String property, String systemenv ->
+    	println "setting up value ${property}"
     	project.ext."$property" = project.hasProperty(property) ? project.getProperty(property) : System.getenv(systemenv)
     }
 }
