@@ -25,9 +25,4 @@ ext {
 		else
 			throw new GradleException("One of the developer properties '${k}' doesn't have id or name or both!")
 	}
-	
-	// initialize helper property method
-	setExtValue = { String property, String systemenv ->
-    	project.ext."$property" = project.hasProperty(property) ? project.getProperty(property) : System.getenv(systemenv)
-    }
 }
