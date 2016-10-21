@@ -1,6 +1,7 @@
 // Setup bintray configuration, redentials are initialized in credentials.gradle file
 // For properties description see gradle bintray plugin readme page 
 bintray {
+	println "under bintray:" + project.bintrayGpgPassword
 	user = project.bintrayUsername
     key = project.bintrayKey
     publications = ["mavenJava"]
@@ -22,6 +23,7 @@ bintray {
             released = new Date()
             vcsTag = project.version
             gpg {
+            	println "under gpg:" + project.bintrayGpgPassword
             	sign = true
             	passphrase = project.bintrayGpgPassword
             }
