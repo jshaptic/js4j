@@ -15,7 +15,10 @@ install:
 # execute custom script instead of default travis execution
 script:
   - ./gradlew check jacocoTestReport coveralls
-
+branches:
+  only:
+  - develop
+  - master
 # Output all test results in case of the build failure
 after_failure:
   - cat build/test-results/test/*.xml
@@ -26,7 +29,7 @@ deploy:
   script: ./gradlew travisDeploy
   skip_cleanup: true
   on:
-    condition: $TRAVIS_TAG = ''
+    all_branches: true
     jdk: oraclejdk8
 
 # Used to avoid uploading the cache after every build, see https://docs.travis-ci.com/user/languages/java/#Caching
