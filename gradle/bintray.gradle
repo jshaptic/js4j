@@ -25,7 +25,7 @@ bintray {
 			gpg {
 				println System.env.BINTRAY_API_KEY == null || System.env.BINTRAY_API_KEY.empty
 				sign = true
-				passphrase = "$System.env.BINTRAY_GPG_PASS"
+				passphrase = '$System.env.BINTRAY_GPG_PASSWORD'
 			}
 		}
 	}
