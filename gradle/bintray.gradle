@@ -3,7 +3,7 @@
 bintray {
 	user = "$System.env.BINTRAY_USER"
 	key = "$System.env.BINTRAY_API_KEY"
-	println System.env.BINTRAY_GPG_PASSWORD.empty
+	println System.env.BINTRAY_GPG_PASSWORD == null || System.env.BINTRAY_GPG_PASSWORD.empty
 	publications = ["mavenJava"]
 	pkg {
 		repo = project.bintrayRepoName
@@ -23,7 +23,7 @@ bintray {
 			released = new Date()
 			vcsTag = project.version
 			gpg {
-				println System.env.BINTRAY_GPG_PASSWORD.empty
+				println System.env.BINTRAY_GPG_PASSWORD == null || System.env.BINTRAY_GPG_PASSWORD.empty
 				sign = true
 				passphrase = "$System.env.BINTRAY_GPG_PASSWORD"
 			}
