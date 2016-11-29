@@ -1,7 +1,5 @@
 import java.text.SimpleDateFormat
 
-println System.getenv("GPG_PASSPHRASE")
-
 ext {
     // initialize build date and time
     Date buildTimeAndDate = new Date()
