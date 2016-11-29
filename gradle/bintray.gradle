@@ -22,10 +22,8 @@ bintray {
 			released = new Date()
 			vcsTag = project.version
 			gpg {
-				println "BINTRAY_USER:" + System.getenv("BINTRAY_USER")
-				println "BINTRAY_GPG_PASSWORD:" + System.getenv("BINTRAY_GPG_PASSWORD")
 				sign = true
-				passphrase = System.getenv("BINTRAY_GPG_PASSWORD")
+				passphrase = project.gpgPassphrase
 			}
 		}
 	}
