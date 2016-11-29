@@ -15,22 +15,23 @@ sudo: false
 notifications:
   email: false
 
-# skip default travis installation task
+# Skip default travis installation task
 install:
   - echo "skip default gradlew assemble"
 
-# execute custom script instead of default travis execution
+# Execute custom script instead of default travis execution
 script:
   - ./gradlew check jacocoTestReport coveralls
 branches:
   only:
   - develop
   - master
+  
 # Output all test results in case of the build failure
 after_failure:
   - cat build/test-results/test/*.xml
 
-# Deploy snapshot version or release version, depending on the branch
+# Deploy snapshot version or release version, depending on the branch (that is decided in gradle, see deployment.gradle)
 deploy:
   provider: script
   script: ./gradlew travisDeploy
