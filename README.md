@@ -7,6 +7,6 @@
 
 Wrapper for Java classes, which emulates Javascript variables and its API. Also includes ported Lodash library.
 
-# Usage
+## Usage
 
 TBD
