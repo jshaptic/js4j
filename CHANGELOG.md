@@ -1,2 +1,3 @@
-# 0.1.0 (2016-12-06)
+## 0.1.0
+##### Released: 06 December 2016
   * Initial creation
