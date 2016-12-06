@@ -34,7 +34,8 @@ task gitReadyForRelease(group: "git") {
 		if (project.version.endsWith("SNAPSHOT"))
 			throw new GradleException("Your current version is a snapshot version, change it in gradle.properties file!")
 		
-		if (grgit.tag.list().any{ it.getName() == project.vcsTag })
+		println project.vcsTag
+		if (grgit.tag.list().any{ it.getName() == project.vcsTag && println(it.getName()) })
 			throw new GradleException("Version '${project.vcsTag}' was already released!")
 	}
 	doLast {
