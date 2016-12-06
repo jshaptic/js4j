@@ -4,6 +4,7 @@ bintray {
 	user = project.bintrayUsername
 	key = project.bintrayKey
 	publications = ["mavenJava"]
+	publish = true
 	pkg {
 		repo = project.bintrayRepoName
 		name = project.name
@@ -20,7 +21,7 @@ bintray {
 			name = project.version
 			desc = "Version '${project.version}' of the '${project.name}' library"
 			released = new Date()
-			vcsTag = project.version
+			vcsTag = project.vcsTag
 			gpg {
 				sign = true
 				passphrase = project.gpgPassphrase
