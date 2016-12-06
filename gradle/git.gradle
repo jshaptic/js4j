@@ -13,7 +13,7 @@ def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
 
 task gitReadyForRelease(group: "git") {
 	description "Fetch all remotes, validates current repository state and will stop execution if something is wrong"
-	doFirst {
+	doLast {
 		// fetch changes from all remote branches
 		grgit.fetch(tagMode: org.ajoberstar.grgit.operation.FetchOp.TagMode.ALL)
 		
@@ -34,12 +34,8 @@ task gitReadyForRelease(group: "git") {
 		if (project.version.endsWith("SNAPSHOT"))
 			throw new GradleException("Your current version is a snapshot version, change it in gradle.properties file!")
 		
-		println project.vcsTag
-		if (grgit.tag.list().any{ it.getName() == project.vcsTag && println(it.getName()) })
+		if (grgit.tag.list().any{ it.getName() == project.vcsTag })
 			throw new GradleException("Version '${project.vcsTag}' was already released!")
-	}
-	doLast {
-		project.vcsTag = "v" + project.version
 	}
 }
 

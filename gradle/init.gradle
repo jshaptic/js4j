@@ -7,7 +7,7 @@ ext {
     buildTime = new SimpleDateFormat("HH:mm:ss.SSSZ").format(buildTimeAndDate)
     
     // initialize vcsTag property
-    vcsTag = ""
+    vcsTag = "v" + project.version
     
     // initialize licenses property
     licenses = []
