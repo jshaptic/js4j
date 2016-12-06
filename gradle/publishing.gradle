@@ -15,7 +15,7 @@ jar {
             "Implementation-Vendor": project.packageVendor
         )
     }
-    from "LICENSE"
+    from "LICENSE" // include license file
 }
 
 // Add javadoc/source jar tasks as artifacts
