@@ -10,11 +10,10 @@ buildscript {
 
 // Define global git object
 def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
-def versionTag = "v" + project.version
 
 task gitReadyForRelease(group: "git") {
 	description "Fetch all remotes, validates current repository state and will stop execution if something is wrong"
-	doLast {
+	doFirst {
 		// fetch changes from all remote branches
 		grgit.fetch(tagMode: org.ajoberstar.grgit.operation.FetchOp.TagMode.ALL)
 		
@@ -35,8 +34,11 @@ task gitReadyForRelease(group: "git") {
 		if (project.version.endsWith("SNAPSHOT"))
 			throw new GradleException("Your current version is a snapshot version, change it in gradle.properties file!")
 		
-		if (grgit.tag.list().any{ it.getName() == versionTag })
-			throw new GradleException("Version '${versionTag}' was already released!")
+		if (grgit.tag.list().any{ it.getName() == project.vcsTag })
+			throw new GradleException("Version '${project.vcsTag}' was already released!")
+	}
+	doLast {
+		project.vcsTag = "v" + project.version
 	}
 }
 
@@ -67,7 +69,7 @@ task gitCreateVersionTag(group: "git") {
 		project.hasProperty("version") && !project.version.endsWith("SNAPSHOT") && (!project.hasProperty("skipVersionTagCreation") || !project.skipVersionTagCreation)
 	}
 	doLast {
-		grgit.tag.add(name: versionTag)
+		grgit.tag.add(name: project.vcsTag)
 	}
 }
 
@@ -79,7 +81,7 @@ task gitPushToMaster(group: "git") {
 		gradle.taskGraph.hasTask(gitRelease)
 	}
 	doLast {
-		grgit.commit(message: "Releasing new version '${versionTag}'")
+		grgit.commit(message: "Releasing new version '${project.vcsTag}'")
 		grgit.push()
 		grgit.push(tags: true)
 	}

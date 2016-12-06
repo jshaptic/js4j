@@ -6,6 +6,9 @@ ext {
     buildDate = new SimpleDateFormat("yyyy-MM-dd").format(buildTimeAndDate)
     buildTime = new SimpleDateFormat("HH:mm:ss.SSSZ").format(buildTimeAndDate)
     
+    // initialize vcsTag property
+    vcsTag = ""
+    
     // initialize licenses property
     licenses = []
 	properties.findAll{ it.key.startsWith("license") && it.value instanceof String }.each { k, v ->
