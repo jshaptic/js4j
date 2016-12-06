@@ -103,7 +103,7 @@ task gitRelease(group: "release") {
 	dependsOn gitPushToMaster
 	dependsOn gitSwitchToDev
 	doLast {
-		println ""
+		println "" 
 		println "Source code was successfully released to master branch! Now go through below checklist:"
 		println "  1) Check build status on CI server"
 		println "  2) Check newly published version in Bintray"
