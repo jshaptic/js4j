@@ -55,7 +55,10 @@ task gitMergeWithMaster(group: "git") {
 		gradle.taskGraph.hasTask(gitRelease) 
 	}
 	doLast {
-		grgit.merge(mode: org.ajoberstar.grgit.operation.MergeOp.Mode.CREATE_COMMIT, head: project.gitDevBranch)
+		grgit.merge(
+			head: project.gitDevBranch,
+			mode: org.ajoberstar.grgit.operation.MergeOp.Mode.CREATE_COMMIT,
+			message: "Releasing new version '${project.vcsTag}'")
 	}
 }
 
@@ -78,8 +81,7 @@ task gitPushToMaster(group: "git") {
 		gradle.taskGraph.hasTask(gitRelease)
 	}
 	doLast {
-		//grgit.commit(message: "Releasing new version '${project.vcsTag}'")
-		//grgit.push()
+		grgit.push()
 		grgit.push(tags: true)
 	}
 }
