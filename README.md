@@ -6,14 +6,14 @@
 [![License](https://img.shields.io/github/license/jshaptic/js4j.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 Wrapper for Java classes, which emulates Javascript variables and its API. Also includes ported Lodash library.
-Not all functions and features are implemented, but most used are here, check [API documentation](https://www.javadoc.io/doc/com.github.jshaptic/js4j)
+Currently not all functions and features are implemented, but most used are here, check [API documentation](https://www.javadoc.io/doc/com.github.jshaptic/js4j)
 for a full list of supported features.
 
 ## Why
 
-Most probably a question in your head just poped up: why it's needed?? Well for example, it can be used as a tool for quick libraries porting from javascript to java.
-Another use case is that it can be as a tool for quick prototyping, when you don't want to bother for types and things like that. Also it can be used as a JSON container
-with handy methods. But to say a truth it was created just 4fun.
+Most probably a question just poped up in your head: Why the hell it's needed for?? Well, for example it can be used as a tool for a quick libraries porting from javascript to java.
+Another use case is that it can be as a tool for quick prototyping, when you don't want to bother about types and things like that. Also it can be used as a JSON container
+with handy methods. But to tell the truth it was created just 4fun.
 
 ## Usage
 
@@ -52,7 +52,7 @@ new UniversalContainer(false).equals(0) // => false
 ContainerFactory.createArray().equals(ContainerFactory.createArray()) // => false
 ```
 
-To check if container is positive in "if" condition method **test** can be used
+To check if container is positive in "if" condition method **test** can be used:
 ```java
 ContainerFactory.undefinedContainer().test() == false // if (undefined) ...
 ContainerFactory.nullContainer().test() == false // if (null) ...
