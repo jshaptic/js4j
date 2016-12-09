@@ -4,7 +4,7 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath "org.ajoberstar:gradle-git:1.5.1"
+		classpath "org.ajoberstar:grgit:1.7.1"
 	}
 }
 
@@ -103,7 +103,12 @@ task gitRelease(group: "release") {
 	dependsOn gitPushToMaster
 	dependsOn gitSwitchToDev
 	doLast {
-		println "Source code was successfully released to master branch!"
-		println "Now check build status on CI server and check if it was correctly published"
+		println "" 
+		println "Source code was successfully released to master branch! Now go through below checklist:"
+		println "  1) Check build status on CI server"
+		println "  2) Check newly published version in Bintray"
+		println "  3) Switch version number to snapshot"
+		println "  4) Create release in Github"
+		println "  5) Sync newly published version to Maven"
 	}
 }
