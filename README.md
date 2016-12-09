@@ -35,8 +35,8 @@ UniversalContainer c = ContainerFactory.createArray("a", "b", "c"); // var c = [
 UniversalContainer c = ContainerFactory.createArray().set(0, "a").set(1, "b").set(2, "c"); // var c = []; c[0] = "a"; c[1] = "b"; c[2] = "c"
 ```
 
-To compare containers method **equals** can be used, it works like === in JS and can be used to compare containers with each other
-or pretty much any other objects
+To compare containers method **equals** can be used, it works like === in JS and used to compare containers with each other
+or pretty much any other objects:
 ```java
 ContainerFactory.undefinedContainer().equals(null) // => true
 new UniversalContainer(69).equals(69) // => true
@@ -56,10 +56,10 @@ ContainerFactory.createArray().test() == true // if ([]) ...
 ```
 
 In most cases API usage is quite relaxed without any errors, since JS is a generous language, but sometimes even JS throwing runtime errors
-and to reflect the same behaviour **ContainerException** runtime exception was introduced. For example this exception will be thrown in following cases:
+and to reflect the same behaviour **ContainerException** class was introduced. For example it will be thrown during runtime in the following cases:
 ```java
 ContainerFactory.undefinedContainer().get(0) // => Cannot get '0' property from Undefined container
 new UniversalContainer("abcde").pop() // => Method 'pop' is not available for String container
 ```
 
-For all other methods and use cases TBD
+For all other methods and use cases one can consult [javadoc](https://www.javadoc.io/doc/com.github.jshaptic/js4j)
