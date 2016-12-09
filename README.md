@@ -70,4 +70,14 @@ ContainerFactory.undefinedContainer().get(0) // => Cannot get '0' property from 
 new UniversalContainer("abcde").pop() // => Method 'pop' is not available for String container
 ```
 
-For all other methods and use cases please consult [javadoc](https://www.javadoc.io/doc/com.github.jshaptic/js4j)
+For all other methods and use cases please consult [javadoc](https://www.javadoc.io/doc/com.github.jshaptic/js4j).
+
+## Backlog
+
+* Implement all missing methods for boolean, number, string, object and array containers
+* Implement infinity, nan, date
+* Implement simple mathematical operations
+* Implement more functions from Lodash library
+* Implement own JSON parser or at least integrate any suitable open-source parser
+* Make object constructors much more complex and useful
+* Refactor value storage mechanism, currently it's implemented with Map, uses to much memory and can be slow 
