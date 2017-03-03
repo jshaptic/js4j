@@ -5,7 +5,12 @@ test {
 
 // For coveralls check jacoco xml report should be turned on
 jacocoTestReport {
-    reports {
+	// It's needed to skip all compile tasks in order use the same compiled classes during tests 
+	compileJava.enabled = false
+	processResources.enabled = false
+	classes.enabled = false
+	
+	reports {
         xml.enabled = true
     }
 }

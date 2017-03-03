@@ -7,8 +7,6 @@ plugins {
     id "com.github.kt3k.coveralls" version "2.6.3"
 }
 
-//TODO: add javadoc publish 
-
 apply from: "gradle/init.gradle"			// intialize helper methods and runtime properties
 apply from: "gradle/dependencies.gradle"	// setup dependecies
 apply from: "gradle/credentials.gradle"		// setup sensitive properties

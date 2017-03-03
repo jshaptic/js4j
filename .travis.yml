@@ -1,7 +1,9 @@
+#TODO: refactor travis file so that switching between JDKs was happening inside one build
+#      and build should be done with JDK8, but tested on JDK7 and JDK8
+#TODO: check https://docs.travis-ci.com/user/languages/java/ looks like need to add oracle-java8-installer
+
 language: java
-jdk:
-  - oraclejdk8
-  - oraclejdk7
+jdk: oraclejdk8
 
 # Encrypted global secret variables (passwords and keys)
 env:
@@ -12,6 +14,10 @@ env:
   
 # Build settings
 sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 notifications:
   email: false
 
@@ -21,7 +27,10 @@ install:
 
 # Execute custom script instead of default travis execution
 script:
-  - ./gradlew check jacocoTestReport coveralls
+  - ./gradlew check
+  - ./gradlew jacocoTestReport coveralls
+  - jdk_switcher use oraclejdk7
+  - ./gradlew jacocoTestReport coveralls
 branches:
   only:
   - develop
