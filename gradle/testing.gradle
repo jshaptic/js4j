@@ -9,6 +9,7 @@ jacocoTestReport {
 	compileJava.enabled = false
 	processResources.enabled = false
 	classes.enabled = false
+	compileTestJava.enabled = false
 	
 	reports {
         xml.enabled = true

@@ -28,9 +28,9 @@ install:
 # Execute custom script instead of default travis execution
 script:
   - ./gradlew check
-  - ./gradlew jacocoTestReport coveralls
+  - ./gradlew test jacocoTestReport coveralls
   - jdk_switcher use oraclejdk7
-  - ./gradlew jacocoTestReport coveralls
+  - ./gradlew test jacocoTestReport coveralls
 branches:
   only:
   - develop
