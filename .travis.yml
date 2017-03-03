@@ -21,13 +21,8 @@ addons:
 notifications:
   email: false
 
-# Skip default travis installation task
-install:
-  - echo "skip default gradlew assemble"
-
 # Execute custom script instead of default travis execution
 script:
-  - ./gradlew check
   - ./gradlew test jacocoTestReport coveralls
   - jdk_switcher use oraclejdk7
   - ./gradlew test jacocoTestReport coveralls
