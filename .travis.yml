@@ -23,9 +23,9 @@ notifications:
 
 # Execute custom script instead of default travis execution
 script:
-  - ./gradlew test jacocoTestReport coveralls -x classes
+  - ./gradlew test jacocoTestReport coveralls -x classes --rerun-task
   - jdk_switcher use oraclejdk7
-  - ./gradlew test jacocoTestReport coveralls -x classes
+  - ./gradlew test jacocoTestReport coveralls -x classes --rerun-task
 branches:
   only:
   - develop
