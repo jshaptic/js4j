@@ -23,7 +23,7 @@ notifications:
 script:
   - ./gradlew --rerun-tasks test jacocoTestReport coveralls -x classes
   - jdk_switcher use oraclejdk7
-  - ./gradlew --rerun-tasks test jacocoTestReport coveralls -x classes
+  - ./gradlew --rerun-tasks test jacocoTestReport coveralls -x classes --debug
 branches:
   only:
   - develop
