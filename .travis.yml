@@ -1,5 +1,8 @@
 #TODO: check https://docs.travis-ci.com/user/languages/java/ looks like need to add oracle-java8-installer
 
+sudo: required
+dist: trusty
+
 language: java
 jdk: oraclejdk8
 
