@@ -1,7 +1,5 @@
 language: java
-jdk:
-  - oraclejdk8
-  - oraclejdk7
+jdk: oraclejdk8
 
 # Encrypted global secret variables (passwords and keys)
 env:
@@ -12,16 +10,16 @@ env:
   
 # Build settings
 sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 notifications:
   email: false
 
-# Skip default travis installation task
-install:
-  - echo "skip default gradlew assemble"
-
 # Execute custom script instead of default travis execution
 script:
-  - ./gradlew check jacocoTestReport coveralls
+  - ./gradlew --rerun-tasks test jacocoTestReport coveralls -x classes
 branches:
   only:
   - develop

@@ -9,7 +9,7 @@ bintray {
 		repo = project.bintrayRepoName
 		name = project.name
 		desc = project.description
-		websiteUrl = project.websiteUrl
+		websiteUrl = project.homeUrl
 		issueTrackerUrl = project.issuesUrl
 		vcsUrl = project.scmUrl
 		licenses = project.licenses.name 

@@ -23,18 +23,17 @@ artifacts {
     archives sourcesJar, javadocJar
 }
 
-// Create additional pom.xml properties 
+// Create additional pom.xml properties to comply with a Sonatype standards 
 def pomConfig = {
     name project.name
     description project.description
-    url project.websiteUrl
+    url project.homeUrl
     inceptionYear project.inceptionYear
     licenses {
         project.licenses.each { lic ->
             license {
 	            name lic.name
 	            url lic.url
-	            distribution "repo"
             }
         }
     }
@@ -50,11 +49,10 @@ def pomConfig = {
     developers {
         project.developers.each { dev ->
             developer {
-                id dev.id
                 name dev.name
-                roles {
-                    role "Developer"
-                }
+                email dev.email
+				organization dev.organization
+				organizationUrl dev.organizationUrl
             }
         }
     }

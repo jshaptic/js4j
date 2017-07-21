@@ -1,3 +1,3 @@
 ## 0.1.0
-##### Released: 09 December 2016
+##### Released: 21 July 2017
   * Initial creation

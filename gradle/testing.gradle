@@ -5,7 +5,7 @@ test {
 
 // For coveralls check jacoco xml report should be turned on
 jacocoTestReport {
-    reports {
+	reports {
         xml.enabled = true
     }
 }
