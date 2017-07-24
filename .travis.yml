@@ -30,6 +30,7 @@ after_failure:
   - cat build/test-results/test/*.xml
 
 # Deploy snapshot version or release version, depending on the branch (that is decided in gradle, see deployment.gradle)
+# TODO if deployment failed do something and add task to redeploy package if it was successfully compiled and tested 
 deploy:
   provider: script
   script: ./gradlew travisDeploy
