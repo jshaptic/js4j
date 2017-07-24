@@ -2,7 +2,7 @@
 *.class
 *.jar
 
-#TestNG
+# TestNG
 test-output/
 
 # Gradle
