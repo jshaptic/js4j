@@ -73,6 +73,7 @@ task gitCreateVersionTag(group: "git") {
 	}
 }
 
+//TODO: add error handling and rollback when password was specified incorrectly  
 task gitPushToMaster(group: "git") {
 	description "Pushes all merged changes and created tag to remote master branch"
 	mustRunAfter gitCreateVersionTag
