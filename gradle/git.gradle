@@ -95,6 +95,7 @@ task gitSwitchToDev(group: "git") {
 	}
 }
 
+//TODO: added check that released verions exists in changelog
 task gitRelease(group: "release") {
 	description "Merges development changes to master branch and pushes all changes to remote"
 	dependsOn gitReadyForRelease
