@@ -1692,6 +1692,13 @@ public class TestUniversalContainer extends Assert
 	}
 	
 	@Test
+	public void testJsonStringifyAndParse()
+	{
+		UniversalContainer c1 = ContainerFactory.createObject("xx\"yy\\zz", "aa\\\"bb\"");
+		c1.deepEquals(JsonParser.parse(JsonParser.stringify(c1)));
+	}
+	
+	@Test
 	public void testClone()
 	{
 		assertTrue(ContainerFactory.undefinedContainer() == ContainerFactory.undefinedContainer().clone());

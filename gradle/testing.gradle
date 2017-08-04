@@ -1,6 +1,13 @@
 // Use TestNG framework instead of default JUnit
 test {
-	useTestNG()
+	useTestNG() {
+		suites "testng.xml"
+	}
+	
+	testLogging {
+		exceptionFormat "full"
+		events "skipped", "failed"
+	}
 }
 
 // For coveralls check jacoco xml report should be turned on
