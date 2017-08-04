@@ -3,7 +3,8 @@ repositories {
 }
 
 dependencies {
-    compile "org.apache.commons:commons-lang3:3.6"
+	compile "org.apache.commons:commons-lang3:3.6"
+    compile "org.apache.commons:commons-text:1.1"
     
     // TODO: try to avoid these two libraries and create own json parser
     compile "com.eclipsesource.minimal-json:minimal-json:0.9.4"

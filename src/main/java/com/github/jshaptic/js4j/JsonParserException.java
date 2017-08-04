@@ -1,6 +1,6 @@
 package com.github.jshaptic.js4j;
 
-public class JsonParserException extends Exception
+public class JsonParserException extends RuntimeException
 {
 	private static final long serialVersionUID = -209820207012642147L;
 	

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -86,7 +88,7 @@ public class JsonParser
 		}
 		else if (container.isString())
 		{
-			sb.append("\"" + container.toString() + "\"");
+			sb.append("\"" + StringEscapeUtils.escapeJson(container.toString()) + "\"");
 		}
 		else
 		{
@@ -156,7 +158,7 @@ public class JsonParser
 			UniversalContainer objectValue = object.get(k);
 			if (!objectValue.isUndefined())
 			{
-				sb.append("\"" + k + "\":");
+				sb.append("\"" +  StringEscapeUtils.escapeJson(k) + "\":");
 				baseStringify(objectValue, sb, stack);
 				sb.append(",");
 				hasPairs = true;
